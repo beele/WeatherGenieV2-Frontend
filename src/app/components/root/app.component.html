@@ -1,0 +1,32 @@
+<div style="text-align:center">
+    <div>
+        <input id="citySearch" type="text" placeholder="Zoek op gemeente" [formControl]="citySearchFormControl" />
+
+        <ul>
+            <li *ngFor="let city of cities | async" (click)="onCitySelected(city)">
+                {{city.name}} ({{city.country}})
+            </li>
+        </ul>
+
+        <hr/>
+
+        <h3>{{selectedCity?.name}}</h3>
+        <ul>
+            <li *ngFor="let tile of tiles | async">
+                {{tile.name}} : {{tile.description}}
+                <br/>
+                <ul>
+                    <li *ngFor="let measurement of tile.measurements">
+                        {{measurement.label}}
+                        <br/>
+                        <span *ngFor="let kv of measurement.values">
+                            {{kv.label}}: {{kv.value}}{{measurement.unit}}
+                            <br/>
+                        </span>
+                    </li>
+                </ul>
+                <br/>
+            </li>
+        </ul>
+    </div>
+</div>
