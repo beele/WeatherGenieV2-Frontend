@@ -16,6 +16,7 @@ import {ForecastHour} from '../../../../../model/forecast-hour';
 import {ForecastRain} from '../../../../../model/forecast-rain';
 import {LightningStrike} from '../../../../../model/lightning-strike';
 import * as moment from 'moment';
+import {Moment, utc} from 'moment';
 
 @Injectable()
 export class WeatherService {
@@ -79,6 +80,7 @@ export class WeatherService {
                             new MeasurementKV('Max', today.maxTemp),
                             new MeasurementKV('Huidig', now.temp)
                         ),
+                        new Measurement('Luchtvochtigheid', '% RHM', new MeasurementKV('Luchtvochtigheid', now.humidity))
                     ]
                 )
             );
@@ -104,10 +106,7 @@ export class WeatherService {
             }
 
             tiles.push(
-                new Tile(
-                    'Komende dagen', 'Bevat de gegevens voor de komende dagen', TileTypes.FORECAST,
-                    forecastedDays
-                )
+                new Tile('Komende dagen', 'Bevat de gegevens voor de komende dagen', TileTypes.FORECAST, forecastedDays)
             );
 
             // =================
@@ -160,23 +159,30 @@ export class WeatherService {
             }
 
             tiles.push(
-                new Tile(
-                    'Regen', 'Bevat de gevevens over neerslag', TileTypes.RAIN,
-                    rainMeasurements
-                )
+                new Tile('Regen', 'Bevat de gevevens over neerslag', TileTypes.RAIN, rainMeasurements)
             );
 
             // =================
             // LIGHTNING
             // =================
-            // TODO: Implement!
-            tiles.push(
-                new Tile(
-                    'Onweer', 'Bevat de gegevens over onweer', TileTypes.THUNDER,
-                    [
+            const lightnings: Measurement[] = [];
+            if (strikes) {
+                const utcNow: Moment = moment().utc(false);
+                for (const strike of strikes) {
+                    const timestamp: Moment = moment(strike.timestamp);
 
-                    ]
-                )
+                    if (utcNow.clone().add(-60, 'minutes').isBefore(timestamp)) {
+                        lightnings.push(new Measurement('Bliksems', '',
+                            new MeasurementKV('time', strike.timestamp),
+                            new MeasurementKV('lat', strike.lat),
+                            new MeasurementKV('lon', strike.lon),
+                        ));
+                    }
+                }
+            }
+
+            tiles.push(
+                new Tile('Onweer', 'Bevat de gegevens over onweer', TileTypes.THUNDER, lightnings)
             );
         }
 
