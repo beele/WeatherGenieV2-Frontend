@@ -1,0 +1,40 @@
+$circle-size: 300px;
+$sun-size: 40px;
+
+#sun-overflow-container {
+    /*box-sizing: content-box;*/
+    width: $circle-size;
+    height: $circle-size / 2;
+    padding-top: $sun-size / 2;
+    padding-left: $sun-size;
+    padding-right: $sun-size / 2;
+    overflow: hidden;
+}
+
+#sun-container {
+    box-sizing: content-box;
+    position: relative;
+    width: $circle-size;
+    height: $circle-size;
+    border: 2px solid azure;
+    border-radius: 50%;
+    transform: rotate(0deg);
+    transition: transform 2.5s ease-in-out;
+}
+
+#sun-icon {
+    position: absolute;
+    width: $sun-size;
+    height: $sun-size;
+    transform: rotate(0deg);
+    transition: transform 2.5s ease-in-out;
+    top: -($sun-size / 2);
+    left: $circle-size / 2 - $sun-size / 2;
+}
+
+#sun-icon-img {
+    background-color: rgb(255,187,0);
+    width: $sun-size;
+    height: $sun-size;
+    border-radius: 50%;
+}

@@ -1,6 +1,6 @@
 export enum TileTypes {
     LOCATION,
-    TEMPERATURE,
+    CURRENT,
     FORECAST,
     WIND,
     SUN,
