@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 
-import {Observable} from 'rxjs/Observable';
 import 'rxjs/Rx';
 
 import {UrlService} from './url.service';
@@ -16,7 +15,11 @@ import {ForecastHour} from '../../../../../model/forecast-hour';
 import {ForecastRain} from '../../../../../model/forecast-rain';
 import {LightningStrike} from '../../../../../model/lightning-strike';
 import * as moment from 'moment';
-import {Moment, utc} from 'moment';
+import {Moment} from 'moment';
+import {Observable} from 'rxjs/internal/Observable';
+import {map} from 'rxjs/operators';
+import {flatMap} from 'rxjs/internal/operators';
+import {forkJoin} from 'rxjs/internal/observable/forkJoin';
 
 @Injectable()
 export class WeatherService {
@@ -31,19 +34,19 @@ export class WeatherService {
         return this.http.get(
             this.urlService.getCityUrl(partialCityName)
         )
-            .map((res: City[]) => res);
+            .pipe(map((res: City[]) => res));
     }
 
     public getForecast(cityId: number): Observable<Tile[]> {
-        return this.http.get(this.urlService.getForecastUrl(cityId)).flatMap((fc: Forecast) => {
+        return this.http.get(this.urlService.getForecastUrl(cityId)).pipe(flatMap((fc: Forecast) => {
 
-            return Observable.forkJoin(
+            return forkJoin(
                 this.http.get(this.urlService.getForecastRainUrl(fc.lat, fc.lon)),
                 this.http.get(this.urlService.getLightningUrl(fc.lat, fc.lon))
-            ).map((responses: [ForecastRain[],  LightningStrike[]]) => {
+            ).pipe(map((responses: [ForecastRain[],  LightningStrike[]]) => {
                 return this.processForecasts(fc, responses[0], responses[1]);
-            });
-        });
+            }));
+        }));
     }
 
     // TODO: Split this logic up!
@@ -66,14 +69,14 @@ export class WeatherService {
         );
 
         // =================
-        // TEMPERATURE
+        // CURRENT
         // =================
         if (forecast && forecast.days && forecast.days.length > 0) {
             const today: ForecastDay = forecast.days[0];
             const now: ForecastHour = today.hours[0];
             tiles.push(
                 new Tile(
-                    'Temperatuur', 'Bevat de huidige temperatuur', TileTypes.TEMPERATURE,
+                    'Huidige waardes', 'Bevat de huidige weergegevens', TileTypes.CURRENT,
                     [
                         new Measurement('Temperatuur', '°C',
                             new MeasurementKV('Min', today.minTemp),
@@ -95,12 +98,10 @@ export class WeatherService {
                     const date: string = moment().add(i, 'days').format('DD/MM');
 
                     forecastedDays.push(
-                        new Measurement(date, 'Temperature',
-                            new MeasurementKV('Min', day.minTemp),
-                            new MeasurementKV('Max', day.maxTemp),
-                            new MeasurementKV('Gem', day.temp)
-                        ),
-                        new Measurement('Omstandigheden', '',
+                        new Measurement(date, '',
+                            new MeasurementKV('Min Temp', day.minTemp),
+                            new MeasurementKV('Max Temp', day.maxTemp),
+                            new MeasurementKV('Avg Temp', day.temp),
                             new MeasurementKV('code', day.conditionCode),
                             new MeasurementKV('code', day.conditionText)
                         )

@@ -1,0 +1,15 @@
+#fake-autocomplete-button {
+    display: none;
+}
+
+#initial-search-container {
+    display: flex;
+    align-items: center;
+    height: 100vh;
+}
+
+#initial-search {
+    text-align: center;
+    background-color: rgba(200, 200, 200, 0.6);
+    height: 300px;
+}
