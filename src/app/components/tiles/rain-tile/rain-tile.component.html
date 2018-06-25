@@ -2,8 +2,6 @@
 
     <div class="row justify-content-md-center">
         <div *ngFor="let measurement of tileData.measurements" class="col-md-3">
-            {{measurement.label}}
-            <br/>
             <span *ngFor="let kv of measurement.values">
                 {{kv.label}}: {{kv.value}}
                 <br/>

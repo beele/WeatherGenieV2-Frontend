@@ -1,5 +1,6 @@
 <div class="btn-group" dropdown #dropdown="bs-dropdown" [autoClose]="false">
-    <input type="text" placeholder="Zoek op gemeente" [formControl]="citySearchFormControl" (focus)="showAutoComplete()">
+    <input type="text" placeholder="Zoek op gemeente"
+           [formControl]="citySearchFormControl" (focus)="showAutoComplete()">
     <button id="fake-autocomplete-button" dropdownToggle type="button" class="btn btn-primary dropdown-toggle">
     </button>
     <ul id="dropdown-triggers-manual" *dropdownMenu class="dropdown-menu"
