@@ -100,7 +100,10 @@ export class WeatherService {
                             new MeasurementKV('Max', day.maxTemp),
                             new MeasurementKV('Gem', day.temp)
                         ),
-                        new Measurement('Omstandigheden', '', new MeasurementKV('code', day.condition))
+                        new Measurement('Omstandigheden', '',
+                            new MeasurementKV('code', day.conditionCode),
+                            new MeasurementKV('code', day.conditionText)
+                        )
                     );
                 }
             }
