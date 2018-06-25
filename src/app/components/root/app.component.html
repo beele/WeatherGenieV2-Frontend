@@ -1,46 +1,62 @@
-<div style="text-align:center">
-    <div id="search-container">
-        <div class="btn-group" dropdown #dropdown="bs-dropdown" [autoClose]="false">
-            <input type="text" placeholder="Zoek op gemeente" [formControl]="citySearchFormControl" (focus)="showAutoComplete()">
-            <button id="fake-autocomplete-button" dropdownToggle type="button" class="btn btn-primary dropdown-toggle">
-                Button dropdown <span class="caret"></span>
-            </button>
-            <ul id="dropdown-triggers-manual" *dropdownMenu class="dropdown-menu"
-                role="menu" aria-labelledby="button-triggers-manual">
-                <li *ngFor="let city of cities | async" role="menuitem">
-                    <a class="dropdown-item" href="#" (click)="onCitySelected(city)">
-                        {{city.name}} {{city.country}}
-                    </a>
-                </li>
-            </ul>
+<div class="container-fluid">
+    <div id="initial-search-container" class="row justify-content-md-center" *ngIf="!selectedCity">
+        <div id="initial-search" class="col-md-12">
+            <br/>
+            <h1 id="initialSearchTitle">Weather Genie</h1>
+
+            <br/>
+
+            <app-search (citySelected)="onCitySelected($event)"></app-search>
+
+            <br/><br/><br/>
+
+            <div id="initialImages">
+                <svg height="75" width="75" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+                    <image x="0" y="0" height="75" width="75" xlink:href="assets/img/svg/sun.svg"></image>
+                </svg>
+                <svg height="75" width="75" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+                    <image x="0" y="0" height="75" width="75" xlink:href="assets/img/svg/temp.svg"></image>
+                </svg>
+                <svg height="75" width="75" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+                    <image x="0" y="0" height="75" width="75" xlink:href="assets/img/svg/rain.svg"></image>
+                </svg>
+                <svg height="75" width="75" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+                    <image x="0" y="0" height="75" width="75" xlink:href="assets/img/svg/lightning.svg"></image>
+                </svg>
+            </div>
         </div>
     </div>
 
-    <hr/>
-
-    <div *ngIf="selectedCity" class="container-fluid">
-        <h3 class="row justify-content-md-center">{{selectedCity?.name}}</h3>
-        <div class="row">
-            <app-current-tile class="col-lg-6" *ngIf="currentConditionsTile" [tileData]="currentConditionsTile">
-            </app-current-tile>
-
-            <app-predicted-tile class="col-lg-6" *ngIf="predictedConditionsTile" [tileData]="predictedConditionsTile">
-            </app-predicted-tile>
+    <div *ngIf="selectedCity">
+        <div id="search-container" class="row">
+            <app-search (citySelected)="onCitySelected($event)"></app-search>
         </div>
-        <div class="row">
-            <app-sun-tile class="col-lg-6" *ngIf="sunTile" [tileData]="sunTile">
-            </app-sun-tile>
 
-            <app-wind-tile class="col-lg-6" *ngIf="windTile" [tileData]="windTile">
-            </app-wind-tile>
-        </div>
-        <div class="row">
-            <app-rain-tile class="col-lg-6" *ngIf="rainTile" [tileData]="rainTile">
-            </app-rain-tile>
+        <hr/>
 
-            <app-lightning-tile class="col-lg-6" *ngIf="lightningTile" [tileData]="lightningTile">
-            </app-lightning-tile>
+        <div>
+            <h3 class="row justify-content-md-center">{{selectedCity?.name}}</h3>
+            <div class="row">
+                <app-current-tile class="col-lg-6" *ngIf="currentConditionsTile" [tileData]="currentConditionsTile">
+                </app-current-tile>
+
+                <app-predicted-tile class="col-lg-6" *ngIf="predictedConditionsTile" [tileData]="predictedConditionsTile">
+                </app-predicted-tile>
+            </div>
+            <div class="row">
+                <app-sun-tile class="col-lg-6" *ngIf="sunTile" [tileData]="sunTile">
+                </app-sun-tile>
+
+                <app-wind-tile class="col-lg-6" *ngIf="windTile" [tileData]="windTile">
+                </app-wind-tile>
+            </div>
+            <div class="row">
+                <app-rain-tile class="col-lg-6" *ngIf="rainTile" [tileData]="rainTile">
+                </app-rain-tile>
+
+                <app-lightning-tile class="col-lg-6" *ngIf="lightningTile" [tileData]="lightningTile">
+                </app-lightning-tile>
+            </div>
         </div>
     </div>
-
 </div>

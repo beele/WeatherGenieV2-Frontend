@@ -13,6 +13,7 @@ import { PredictedTileComponent } from './components/tiles/predicted-tile/predic
 import { RainTileComponent } from './components/tiles/rain-tile/rain-tile.component';
 import { LightningTileComponent } from './components/tiles/lightning-tile/lightning-tile.component';
 import { WindTileComponent } from './components/tiles/wind-tile/wind-tile.component';
+import { SearchComponent } from './components/search/search.component';
 
 @NgModule({
     declarations: [
@@ -22,7 +23,8 @@ import { WindTileComponent } from './components/tiles/wind-tile/wind-tile.compon
         PredictedTileComponent,
         RainTileComponent,
         LightningTileComponent,
-        WindTileComponent
+        WindTileComponent,
+        SearchComponent
     ],
     imports: [
         BrowserModule,
