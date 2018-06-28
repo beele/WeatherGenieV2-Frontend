@@ -1,14 +1,47 @@
 <div id="current-container" class="tile">
 
-    <div class="row justify-content-md-center">
-        <div *ngFor="let measurement of tileData.measurements" class="col-md-3">
-            {{measurement.label}}
+    <div class="row justify-content-md-center align-items-md-center h-100">
+
+        <div class="col-md-6 centered">
+            <svg height="100" width="100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+                <image x="0" y="0" height="100" width="100" xlink:href="" [attr.xlink:href]="'assets/img/svg/' + getCurrentConditionSvgName()"></image>
+            </svg>
             <br/>
-            <span *ngFor="let kv of measurement.values">
-                {{kv.label}}: {{kv.value}}
-                <br/>
-            </span>
+            {{tileData.conditionAsText}}
         </div>
+
+        <div class="col-md-6 centered">
+            <div class="row justify-content-center">
+                <div class="col-xs-3 test">
+                    <svg height="40" width="40" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+                        <image x="0" y="0" height="40" width="40" xlink:href="" [attr.xlink:href]="'assets/img/svg/temp.svg'"></image>
+                    </svg>
+                    <div>Now: {{ tileData.temp | number:0 }} &deg;C</div>
+                </div>
+
+                <div class="col-xs-3 test">
+                    <svg height="40" width="40" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+                        <image x="0" y="0" height="40" width="40" xlink:href="" [attr.xlink:href]="'assets/img/svg/temp.svg'"></image>
+                    </svg>
+                    <div>Min: {{ tileData.minTemp | number:0 }} °C</div>
+                </div>
+
+                <div class="col-xs-3 test">
+                    <svg height="40" width="40" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+                        <image x="0" y="0" height="40" width="40" xlink:href="" [attr.xlink:href]="'assets/img/svg/temp.svg'"></image>
+                    </svg>
+                    <div>Max: {{ tileData.maxTemp | number:0 }} °C</div>
+                </div>
+
+                <div class="col-xs-3 test">
+                    <svg height="40" width="40" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+                        <image x="0" y="0" height="40" width="40" xlink:href="" [attr.xlink:href]="'assets/img/svg/humidity.svg'"></image>
+                    </svg>
+                    <div>Hum: {{ tileData.humidity }} %</div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 </div>

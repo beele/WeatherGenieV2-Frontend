@@ -7,9 +7,6 @@ import {UrlService} from './url.service';
 import {City} from '../../../../../model/city';
 import {Forecast} from '../../../../../model/forecast';
 import {Tile} from '../model/tile';
-import {TileTypes} from '../model/enums/tile-types';
-import {Measurement} from '../model/measurement';
-import {MeasurementKV} from '../model/measurement-k-v';
 import {ForecastDay} from '../../../../../model/forecast-day';
 import {ForecastHour} from '../../../../../model/forecast-hour';
 import {ForecastRain} from '../../../../../model/forecast-rain';
@@ -20,6 +17,13 @@ import {Observable} from 'rxjs/internal/Observable';
 import {map} from 'rxjs/operators';
 import {flatMap} from 'rxjs/internal/operators';
 import {forkJoin} from 'rxjs/internal/observable/forkJoin';
+import {LocationTile} from '../model/tiles/location-tile';
+import {CurrentConditionsTile} from '../model/tiles/current-conditions-tile';
+import {ForecastedConditionsTile, ForecastedDay} from '../model/tiles/forecasted-conditions-tile';
+import {SunTile} from '../model/tiles/sun-tile';
+import {WindTile} from '../model/tiles/wind-tile';
+import {RainTile} from '../model/tiles/rain-tile';
+import {DetectedStrike, LightningTile} from '../model/tiles/lightning-tile';
 
 @Injectable()
 export class WeatherService {
@@ -43,7 +47,7 @@ export class WeatherService {
             return forkJoin(
                 this.http.get(this.urlService.getForecastRainUrl(fc.lat, fc.lon)),
                 this.http.get(this.urlService.getLightningUrl(fc.lat, fc.lon))
-            ).pipe(map((responses: [ForecastRain[],  LightningStrike[]]) => {
+            ).pipe(map((responses: [ForecastRain[], LightningStrike[]]) => {
                 return this.processForecasts(fc, responses[0], responses[1]);
             }));
         }));
@@ -57,14 +61,9 @@ export class WeatherService {
         // LOCATION
         // =================
         tiles.push(
-            new Tile(
-                'Locatie', 'Bevat de locatiegegevens van de gemeente', TileTypes.LOCATION,
-                [
-                    new Measurement('Locatie', '°',
-                        new MeasurementKV('Latitude', forecast.lat),
-                        new MeasurementKV('Longitude', forecast.lon)
-                    ),
-                ]
+            new LocationTile(
+                'Locatie', 'Bevat de locatiegegevens van de gemeente',
+                forecast.lat, forecast.lon
             )
         );
 
@@ -75,58 +74,50 @@ export class WeatherService {
             const today: ForecastDay = forecast.days[0];
             const now: ForecastHour = today.hours[0];
             tiles.push(
-                new Tile(
-                    'Huidige waardes', 'Bevat de huidige weergegevens', TileTypes.CURRENT,
-                    [
-                        new Measurement('Temperatuur', '°C',
-                            new MeasurementKV('Min', today.minTemp),
-                            new MeasurementKV('Max', today.maxTemp),
-                            new MeasurementKV('Huidig', now.temp)
-                        ),
-                        new Measurement('Luchtvochtigheid', '% RHM', new MeasurementKV('Luchtvochtigheid', now.humidity))
-                    ]
+                new CurrentConditionsTile(
+                    'Current conditions', 'Contains the current weather conditions',
+                    today.minTemp, today.maxTemp, now.temp,
+                    now.conditionCode, now.conditionText,
+                    now.humidity
                 )
             );
 
             // =================
             // FORECAST
             // =================
-            const forecastedDays: Measurement[] = [];
+            const forecastedDays: ForecastedDay[] = [];
             for (let i: number = 0; i < forecast.days.length; i++) {
                 if (i > 0 && i < 5) {
                     const day: ForecastDay = forecast.days[i];
-                    const date: string = moment().add(i, 'days').format('DD/MM');
+                    const date: Moment = moment().add(i, 'days');
 
-                    forecastedDays.push(
-                        new Measurement(date, '',
-                            new MeasurementKV('Min Temp', day.minTemp),
-                            new MeasurementKV('Max Temp', day.maxTemp),
-                            new MeasurementKV('Avg Temp', day.temp),
-                            new MeasurementKV('code', day.conditionCode),
-                            new MeasurementKV('code', day.conditionText)
-                        )
+                    forecastedDays.push({
+                            date: date,
+                            minTemp: day.minTemp,
+                            maxTemp: day.maxTemp,
+                            temp: day.temp,
+                            condition: day.conditionCode,
+                            conditionAsText: day.conditionText
+                        }
                     );
                 }
             }
 
             tiles.push(
-                new Tile('Komende dagen', 'Bevat de gegevens voor de komende dagen', TileTypes.FORECAST, forecastedDays)
+                new ForecastedConditionsTile(
+                    'Next days', 'Contains the conditions for the coming days',
+                    forecastedDays
+                )
             );
 
             // =================
             // SUN
             // =================
             tiles.push(
-                new Tile(
-                    'Zon', 'Bevat de gegevens van de zon', TileTypes.SUN,
-                    [
-                        new Measurement('Zonnestand', '',
-                            new MeasurementKV('Zonsopgang', today.sunrise),
-                            new MeasurementKV('Zonsondergang', today.sunset)
-                        ),
-                        new Measurement('Max UV-Index', '', new MeasurementKV('UV-Index', today.uvIndex)),
-                        new Measurement('Zonneschijn', 'W/m2', new MeasurementKV('Zonneschijn', now.sunshine))
-                    ]
+                new SunTile(
+                    'Sun', 'Contains the data of the sun',
+                    today.sunrise, today.sunset,
+                    now.uvIndex, now.sunshine
                 )
             );
 
@@ -134,59 +125,60 @@ export class WeatherService {
             // WIND
             // =================
             tiles.push(
-                new Tile(
-                    'Wind', 'Bevat de gegevens van de wind', TileTypes.WIND,
-                    [
-                        new Measurement('Windsnelheid', 'km/u', new MeasurementKV('Windsnelheid', now.windSpeed)),
-                        new Measurement('Windkracht', 'Bft', new MeasurementKV('Windkracht', now.windBeaufort)),
-                        new Measurement('Windrichting', '', new MeasurementKV('Windrichting', now.windDirection)),
-                    ]
+                new WindTile(
+                    'Wind', 'Contains the wind data',
+                    now.windSpeed, now.windBeaufort, now.windDirection
                 )
             );
 
             // =================
             // RAIN
             // =================
-            const rainMeasurements: Measurement[] = [];
-            rainMeasurements.push(new Measurement('Intensiteit', 'mm/u', new MeasurementKV('Huidig', now.precipitationActual)));
+            const rainMeasurementsMinutes: number[] = [];
+            const rainMeasurementsHours: number[] = [];
 
             for (let i: number = 1; i < rainForecasts.length; i++) {
                 const rainForecast: ForecastRain = rainForecasts[i];
-                rainMeasurements.push(new Measurement('Vooruitzicht (per 5 min)', 'mm/u', new MeasurementKV('+' + (i * 5) + ' minuten', rainForecast.precipitation)));
+                rainMeasurementsMinutes.push(rainForecast.precipitation);
             }
 
             if (today.hours.length > 3) {
                 for (let i: number = 3; i < today.hours.length; i++) {
                     const hour: ForecastHour = today.hours[i];
-                    rainMeasurements.push(new Measurement('Vooruitzicht (per uur)', 'mm/u', new MeasurementKV('+' + i + ' uur', hour.precipitation)));
+                    rainMeasurementsHours.push(hour.precipitation);
                 }
             }
 
             tiles.push(
-                new Tile('Regen', 'Bevat de gevevens over neerslag', TileTypes.RAIN, rainMeasurements)
+                new RainTile(
+                    'Rain', 'Contain the rain data',
+                    rainMeasurementsMinutes, rainMeasurementsHours
+                )
             );
 
             // =================
             // LIGHTNING
             // =================
-            const lightnings: Measurement[] = [];
+            const lightnings: DetectedStrike[] = [];
             if (strikes) {
                 const utcNow: Moment = moment().utc(false);
                 for (const strike of strikes) {
                     const timestamp: Moment = moment(strike.timestamp);
 
                     if (utcNow.clone().add(-60, 'minutes').isBefore(timestamp)) {
-                        lightnings.push(new Measurement('Bliksems', '',
-                            new MeasurementKV('time', strike.timestamp),
-                            new MeasurementKV('lat', strike.lat),
-                            new MeasurementKV('lon', strike.lon),
-                        ));
+                        lightnings.push({
+                            lat: strike.lat,
+                            lon: strike.lon,
+                            timestamp: strike.timestamp
+                        });
                     }
                 }
             }
 
             tiles.push(
-                new Tile('Onweer', 'Bevat de gegevens over onweer', TileTypes.THUNDER, lightnings)
+                new LightningTile(
+                    'Lightning', 'Contains the lighting data',
+                    lightnings)
             );
         }
 

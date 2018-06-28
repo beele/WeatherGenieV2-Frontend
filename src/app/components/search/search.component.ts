@@ -17,7 +17,7 @@ import {WeatherService} from '../../services/weather.service';
 })
 export class SearchComponent implements OnInit {
 
-    cities: Observable<City[]>;
+    cities$: Observable<City[]>;
     citySearchFormControl: FormControl;
     selectedCity: City;
 
@@ -28,7 +28,7 @@ export class SearchComponent implements OnInit {
     emitter: EventEmitter<City> = new EventEmitter<City>();
 
     constructor(private weatherService: WeatherService) {
-        this.cities = from([]);
+        this.cities$ = from([]);
         this.citySearchFormControl = new FormControl();
     }
 
@@ -37,12 +37,18 @@ export class SearchComponent implements OnInit {
             if (!this.dropdown.isOpen) {
                 this.dropdown.show();
             }
-            this.cities = this.weatherService.getCities(partialCityName);
+            this.cities$ = this.weatherService.getCities(partialCityName);
         });
     }
 
     showAutoComplete(): void {
         this.dropdown.show();
+    }
+
+    hideAutoComplete(event: FocusEvent): void {
+        if (!event.relatedTarget) {
+            this.dropdown.hide();
+        }
     }
 
     onCitySelected(city: City): void {

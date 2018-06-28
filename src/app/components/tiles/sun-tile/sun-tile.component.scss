@@ -2,7 +2,7 @@ $circle-size: 300px;
 $sun-size: 40px;
 
 #sun-overflow-container {
-    /*box-sizing: content-box;*/
+    box-sizing: content-box;
     width: $circle-size;
     height: $circle-size / 2;
     padding-top: $sun-size / 2;

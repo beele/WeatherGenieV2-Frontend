@@ -5,5 +5,5 @@ export enum TileTypes {
     WIND,
     SUN,
     RAIN,
-    THUNDER
+    LIGHTNING
 }

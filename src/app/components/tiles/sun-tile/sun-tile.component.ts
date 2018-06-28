@@ -1,9 +1,7 @@
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
-import {Tile} from '../../../model/tile';
-import {TileUtils} from '../../../utils/tile-utils';
-import {Measurement} from '../../../model/measurement';
 import {Moment} from 'moment';
 import * as moment from 'moment';
+import {SunTile} from '../../../model/tiles/sun-tile';
 
 @Component({
     selector: 'app-sun-tile',
@@ -13,7 +11,7 @@ import * as moment from 'moment';
 export class SunTileComponent implements OnInit, OnChanges {
 
     @Input()
-    tileData: Tile;
+    tileData: SunTile;
 
     private angle: number;
 
@@ -27,9 +25,8 @@ export class SunTileComponent implements OnInit, OnChanges {
 
     ngOnChanges() {
         this.updateSunPosition(-100);
-        const sunPositionDetails: Measurement = TileUtils.getMeasurementByName(this.tileData, 'Zonnestand');
-        const sunrise: Moment = moment(sunPositionDetails.values[0].value);
-        const sunset: Moment = moment(sunPositionDetails.values[1].value);
+        const sunrise: Moment = moment(this.tileData.sunrise);
+        const sunset: Moment = moment(this.tileData.sunset);
 
         const nowTime: Moment = moment().utc();
         const minutesBetweenSunriseAndSunset = sunset.diff(sunrise, 'minutes', true);

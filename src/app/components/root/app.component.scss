@@ -13,3 +13,22 @@
     background-color: rgba(200, 200, 200, 0.6);
     height: 300px;
 }
+
+#search-container {
+    background-color: rgba(200, 200, 200, 0.6);
+}
+
+#in-page-search {
+    text-align: right;
+    margin-top: 9px;
+}
+
+@media (max-width: 767px) {
+    #in-page-title {
+        text-align: center;
+    }
+
+    #in-page-search {
+        text-align: center;
+    }
+}

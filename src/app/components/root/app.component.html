@@ -1,5 +1,5 @@
 <div class="container-fluid">
-    <div id="initial-search-container" class="row justify-content-md-center" *ngIf="!selectedCity">
+    <div id="initial-search-container" class="row justify-content-md-center" *ngIf="!selectedCity" [@fadeInOut]>
         <div id="initial-search" class="col-md-12">
             <br/>
             <h1 id="initialSearchTitle">Weather Genie</h1>
@@ -10,7 +10,7 @@
 
             <br/><br/><br/>
 
-            <div id="initialImages">
+            <div id="initial-images">
                 <svg height="75" width="75" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
                     <image x="0" y="0" height="75" width="75" xlink:href="assets/img/svg/sun.svg"></image>
                 </svg>
@@ -27,12 +27,12 @@
         </div>
     </div>
 
-    <div *ngIf="selectedCity">
-        <div id="search-container" class="row">
-            <app-search (citySelected)="onCitySelected($event)"></app-search>
+    <div *ngIf="selectedCity" [@fadeInOut]>
+        <div id="search-container" class="row justify-content-center">
+            <h1 id="in-page-title" class="col">Weather Genie</h1>
+            <div class="col-md-auto"></div>
+            <app-search id="in-page-search" class="col" (citySelected)="onCitySelected($event)"></app-search>
         </div>
-
-        <hr/>
 
         <div>
             <h3 class="row justify-content-md-center">{{selectedCity?.name}}</h3>

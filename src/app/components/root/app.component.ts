@@ -6,11 +6,23 @@ import {Tile} from '../../model/tile';
 import {TileTypes} from '../../model/enums/tile-types';
 
 import 'rxjs/Rx';
+import {animate, style, transition, trigger} from '@angular/animations';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss']
+    styleUrls: ['./app.component.scss'],
+    animations: [
+        trigger('fadeInOut', [
+            transition(':enter', [
+                style({opacity: 0}),
+                animate(1000, style({opacity: 1}))
+            ]),
+            transition(':leave', [
+                animate(500, style({opacity: 0}))
+            ])
+        ])
+    ]
 })
 export class AppComponent implements OnInit {
 
@@ -75,7 +87,7 @@ export class AppComponent implements OnInit {
                         case TileTypes.RAIN:
                             this.rainTile = tile;
                             break;
-                        case TileTypes.THUNDER:
+                        case TileTypes.LIGHTNING:
                             this.lightningTile = tile;
                             break;
                     }

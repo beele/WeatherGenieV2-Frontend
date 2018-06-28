@@ -14,6 +14,7 @@ import { RainTileComponent } from './components/tiles/rain-tile/rain-tile.compon
 import { LightningTileComponent } from './components/tiles/lightning-tile/lightning-tile.component';
 import { WindTileComponent } from './components/tiles/wind-tile/wind-tile.component';
 import { SearchComponent } from './components/search/search.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
     declarations: [
@@ -28,6 +29,7 @@ import { SearchComponent } from './components/search/search.component';
     ],
     imports: [
         BrowserModule,
+        BrowserAnimationsModule,
         HttpClientModule,
         ReactiveFormsModule,
         BsDropdownModule.forRoot()
