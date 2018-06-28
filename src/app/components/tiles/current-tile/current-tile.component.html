@@ -12,32 +12,32 @@
 
         <div class="col-md-6 centered">
             <div class="row justify-content-center">
-                <div class="col-xs-3 test">
+                <div class="col-lg-6 col-3 current-conditions-item">
                     <svg height="40" width="40" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
                         <image x="0" y="0" height="40" width="40" xlink:href="" [attr.xlink:href]="'assets/img/svg/temp.svg'"></image>
                     </svg>
-                    <div>Now: {{ tileData.temp | number:0 }} &deg;C</div>
+                    <div class="current-conditions-item-text">Min: {{ tileData.minTemp | number:0 }} °C</div>
                 </div>
 
-                <div class="col-xs-3 test">
+                <div class="col-lg-6 col-3 current-conditions-item">
                     <svg height="40" width="40" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
                         <image x="0" y="0" height="40" width="40" xlink:href="" [attr.xlink:href]="'assets/img/svg/temp.svg'"></image>
                     </svg>
-                    <div>Min: {{ tileData.minTemp | number:0 }} °C</div>
+                    <div class="current-conditions-item-text">Max: {{ tileData.maxTemp | number:0 }} °C</div>
                 </div>
 
-                <div class="col-xs-3 test">
+                <div class="col-lg-6 col-3 current-conditions-item">
                     <svg height="40" width="40" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
                         <image x="0" y="0" height="40" width="40" xlink:href="" [attr.xlink:href]="'assets/img/svg/temp.svg'"></image>
                     </svg>
-                    <div>Max: {{ tileData.maxTemp | number:0 }} °C</div>
+                    <div class="current-conditions-item-text">Now: {{ tileData.temp | number:0 }} &deg;C</div>
                 </div>
 
-                <div class="col-xs-3 test">
+                <div class="col-lg-6 col-3 current-conditions-item">
                     <svg height="40" width="40" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
                         <image x="0" y="0" height="40" width="40" xlink:href="" [attr.xlink:href]="'assets/img/svg/humidity.svg'"></image>
                     </svg>
-                    <div>Hum: {{ tileData.humidity }} %</div>
+                    <div class="current-conditions-item-text">Hum: {{ tileData.humidity }} %</div>
                 </div>
             </div>
         </div>

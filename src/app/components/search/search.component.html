@@ -1,17 +1,15 @@
 <div class="btn-group" dropdown #dropdown="bs-dropdown" [autoClose]="false">
     <input id="search-input" type="text" placeholder="Search for city"
-           [formControl]="citySearchFormControl" (focus)="showAutoComplete()" (blur)="hideAutoComplete($event)">
+           [formControl]="citySearchFormControl" (blur)="hideAutoComplete($event)">
     <button id="fake-autocomplete-button" dropdownToggle type="button" class="btn btn-primary dropdown-toggle">
     </button>
 
-    <div *ngIf="(cities$ | async)?.length > 0">
-        <ul id="dropdown-triggers-manual" *dropdownMenu class="dropdown-menu"
-            role="menu" aria-labelledby="button-triggers-manual">
-            <li *ngFor="let city of cities$ | async" role="menuitem">
-                <a class="dropdown-item result-item" href="#" (click)="onCitySelected(city)">
-                    {{city.name}} <span class="subtext">{{city.country}}</span>
-                </a>
-            </li>
-        </ul>
-    </div>
+    <ul id="dropdown-triggers-manual" *dropdownMenu class="dropdown-menu"
+        role="menu" aria-labelledby="button-triggers-manual">
+        <li *ngFor="let city of cities$ | async" role="menuitem">
+            <a class="dropdown-item result-item" href="#" (click)="onCitySelected(city)">
+                {{city.name}} <span class="subtext">{{city.country}}</span>
+            </a>
+        </li>
+    </ul>
 </div>

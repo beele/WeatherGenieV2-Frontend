@@ -14,7 +14,7 @@ import {LightningStrike} from '../../../../../model/lightning-strike';
 import * as moment from 'moment';
 import {Moment} from 'moment';
 import {Observable} from 'rxjs/internal/Observable';
-import {map} from 'rxjs/operators';
+import {catchError, map} from 'rxjs/operators';
 import {flatMap} from 'rxjs/internal/operators';
 import {forkJoin} from 'rxjs/internal/observable/forkJoin';
 import {LocationTile} from '../model/tiles/location-tile';
@@ -24,6 +24,7 @@ import {SunTile} from '../model/tiles/sun-tile';
 import {WindTile} from '../model/tiles/wind-tile';
 import {RainTile} from '../model/tiles/rain-tile';
 import {DetectedStrike, LightningTile} from '../model/tiles/lightning-tile';
+import {of} from 'rxjs/internal/observable/of';
 
 @Injectable()
 export class WeatherService {
@@ -32,13 +33,14 @@ export class WeatherService {
 
     }
 
-    // TODO: Error handling!
-
     public getCities(partialCityName: string): Observable<City[]> {
         return this.http.get(
             this.urlService.getCityUrl(partialCityName)
-        )
-            .pipe(map((res: City[]) => res));
+        ).pipe(
+            map((res: City[]) => res),
+            catchError((error) => {
+                return of([]);
+            }));
     }
 
     public getForecast(cityId: number): Observable<Tile[]> {
@@ -49,6 +51,8 @@ export class WeatherService {
                 this.http.get(this.urlService.getLightningUrl(fc.lat, fc.lon))
             ).pipe(map((responses: [ForecastRain[], LightningStrike[]]) => {
                 return this.processForecasts(fc, responses[0], responses[1]);
+            }), catchError((error) => {
+                return of([]);
             }));
         }));
     }

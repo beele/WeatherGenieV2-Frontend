@@ -4,11 +4,11 @@ import {FormControl} from '@angular/forms';
 import {BsDropdownDirective} from 'ngx-bootstrap';
 
 import {Observable} from 'rxjs/internal/Observable';
-import {from} from 'rxjs/internal/observable/from';
 import {debounceTime} from 'rxjs/operators';
 
 import {City} from '../../../../../../model/city';
 import {WeatherService} from '../../services/weather.service';
+import {of} from 'rxjs/internal/observable/of';
 
 @Component({
     selector: 'app-search',
@@ -28,21 +28,19 @@ export class SearchComponent implements OnInit {
     emitter: EventEmitter<City> = new EventEmitter<City>();
 
     constructor(private weatherService: WeatherService) {
-        this.cities$ = from([]);
         this.citySearchFormControl = new FormControl();
     }
 
     ngOnInit() {
-        this.citySearchFormControl.valueChanges.pipe(debounceTime(250)).subscribe((partialCityName) => {
-            if (!this.dropdown.isOpen) {
+        this.citySearchFormControl.valueChanges.pipe(debounceTime(250)).subscribe((partialCityName: string) => {
+            if (partialCityName.trim() !== '') {
+                this.cities$ = this.weatherService.getCities(partialCityName);
                 this.dropdown.show();
+            } else {
+                this.dropdown.hide();
+                this.cities$ = of([]);
             }
-            this.cities$ = this.weatherService.getCities(partialCityName);
         });
-    }
-
-    showAutoComplete(): void {
-        this.dropdown.show();
     }
 
     hideAutoComplete(event: FocusEvent): void {
