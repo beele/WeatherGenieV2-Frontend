@@ -1,0 +1,21 @@
+@media (max-width: 575.98px) {
+    .predicted-conditions-item:nth-child(-n+2) {
+        margin-top: 42px;
+        margin-bottom: 12px;
+    }
+
+    .predicted-conditions-condition {
+        display: none;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .predicted-conditions-item:nth-child(-n+2) {
+        margin-top: 42px;
+        margin-bottom: 12px;
+    }
+
+    .predicted-conditions-condition {
+        display: none;
+    }
+}

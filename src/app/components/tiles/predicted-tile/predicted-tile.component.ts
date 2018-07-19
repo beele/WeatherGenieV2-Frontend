@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Tile} from '../../../model/tile';
+import {ForecastedConditionsTile} from '../../../model/tiles/forecasted-conditions-tile';
+import {ConditionUtils} from '../../../utils/condition-utils';
 
 @Component({
     selector: 'app-predicted-tile',
@@ -9,9 +10,12 @@ import {Tile} from '../../../model/tile';
 export class PredictedTileComponent implements OnInit {
 
     @Input()
-    tileData: Tile;
+    tileData: ForecastedConditionsTile;
+
+    public conditionFn: Function;
 
     constructor() {
+        this.conditionFn = ConditionUtils.getConditionSvgName;
     }
 
     ngOnInit() {

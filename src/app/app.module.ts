@@ -15,6 +15,16 @@ import { LightningTileComponent } from './components/tiles/lightning-tile/lightn
 import { WindTileComponent } from './components/tiles/wind-tile/wind-tile.component';
 import { SearchComponent } from './components/search/search.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {RouterModule, Routes} from '@angular/router';
+
+const appRoutes: Routes = [
+    { path: '',
+        component: AppComponent
+    },
+    { path: 'city:name',
+        component: AppComponent
+    }
+];
 
 @NgModule({
     declarations: [
@@ -30,6 +40,9 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
+        RouterModule.forRoot(
+            appRoutes
+        ),
         HttpClientModule,
         ReactiveFormsModule,
         BsDropdownModule.forRoot()

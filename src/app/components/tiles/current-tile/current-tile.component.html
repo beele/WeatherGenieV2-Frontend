@@ -1,10 +1,13 @@
 <div id="current-container" class="tile">
 
     <div class="row justify-content-md-center align-items-md-center h-100">
+        <div class="tile-title">
+            Now:
+        </div>
 
         <div class="col-md-6 centered">
             <svg height="100" width="100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
-                <image x="0" y="0" height="100" width="100" xlink:href="" [attr.xlink:href]="'assets/img/svg/' + getCurrentConditionSvgName()"></image>
+                <image x="0" y="0" height="100" width="100" xlink:href="" [attr.xlink:href]="'assets/img/svg/' + conditionFn(tileData.condition)"></image>
             </svg>
             <br/>
             {{tileData.conditionAsText}}
